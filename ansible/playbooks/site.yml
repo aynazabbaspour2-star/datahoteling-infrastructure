@@ -1,0 +1,7 @@
+---
+- name: Configure DataHoteling infrastructure
+  hosts: cpanel
+  become: true
+
+  roles:
+    - common
