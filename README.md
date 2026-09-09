@@ -78,4 +78,4 @@ applied to the production infrastructure.
 
 Status
 
-🚧 Work in progress
+Work in progress
