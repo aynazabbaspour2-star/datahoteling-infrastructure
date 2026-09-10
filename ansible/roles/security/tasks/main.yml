@@ -1,0 +1,36 @@
+---
+- name: Ensure SSH root login is disabled
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^[#\s]*PermitRootLogin\s+'
+    line: "PermitRootLogin {{ security_sshd_permit_root_login }}"
+    create: false
+    backup: true
+  notify: Restart sshd
+
+- name: Ensure SSH public key authentication is enabled
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^[#\s]*PubkeyAuthentication\s+'
+    line: "PubkeyAuthentication {{ security_sshd_pubkey_authentication }}"
+    create: false
+    backup: true
+  notify: Restart sshd
+
+- name: Ensure SSH password authentication remains explicitly configured
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^[#\s]*PasswordAuthentication\s+'
+    line: "PasswordAuthentication {{ security_sshd_password_authentication }}"
+    create: false
+    backup: true
+  notify: Restart sshd
+
+- name: Disable SSH X11 forwarding
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^[#\s]*X11Forwarding\s+'
+    line: "X11Forwarding {{ security_sshd_x11_forwarding }}"
+    create: false
+    backup: true
+  notify: Restart sshd

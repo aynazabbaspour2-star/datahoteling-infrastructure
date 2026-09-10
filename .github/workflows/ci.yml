@@ -1,0 +1,98 @@
+name: Infrastructure CI
+
+on:
+  push:
+    branches:
+      - main
+      - feat/**
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        environment:
+          - lab
+          - production
+
+    defaults:
+      run:
+        working-directory: terraform/environments/${{ matrix.environment }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.16.1
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Init
+        run: terraform init -backend=false
+
+      - name: Terraform Validate
+        run: terraform validate
+
+  packer:
+    name: Packer
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Packer
+        uses: hashicorp/setup-packer@v3
+        with:
+          version: 1.16.0
+
+      - name: Packer Format Check
+        run: packer fmt -check packer/almalinux
+
+      - name: Packer Init
+        run: packer init packer/almalinux
+
+      - name: Packer Validate
+        run: >
+          packer validate
+          -var 'vsphere_server=192.168.1.21'
+          -var 'vsphere_username=ci-user'
+          -var 'vsphere_password=ci-password'
+          -var 'ssh_password=ci-password'
+          -var 'host=192.168.1.21'
+          -var 'datastore=datastore1'
+          -var 'network=VM Network'
+          packer/almalinux
+
+  ansible:
+    name: Ansible
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ansible
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Ansible
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install ansible
+
+      - name: Ansible Syntax Check
+        run: |
+          ansible-playbook \
+            -i inventories/production/hosts.yml \
+            playbooks/site.yml \
+            --syntax-check
