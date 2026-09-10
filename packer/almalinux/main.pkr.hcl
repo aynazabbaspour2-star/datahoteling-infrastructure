@@ -13,30 +13,29 @@ source "vsphere-iso" "almalinux" {
   password            = var.vsphere_password
   insecure_connection = true
 
-  host      = "192.168.1.21"
-  datastore = "datastore1"
+  host      = var.host
+  datastore = var.datastore
 
   vm_name = var.vm_name
 
-  CPUs = 2
-  RAM  = 4096
+  CPUs = var.num_cpus
+  RAM  = var.memory
 
   guest_os_type = "rhel9_64Guest"
 
   storage {
-    disk_size             = 20480
+    disk_size             = var.disk_size_mb
     disk_thin_provisioned = true
   }
 
   network_adapters {
-    network      = "VM Network"
+    network      = var.network
     network_card = "vmxnet3"
   }
 
-  http_directory = "http"
 
   http_content = {
-    "/ks.cfg" = templatefile("${path.root}/http/ks.cfg", {
+    "/ks.cfg" = templatefile("http/ks.cfg", {
       packer_password = var.ssh_password
     })
   }
@@ -54,8 +53,8 @@ source "vsphere-iso" "almalinux" {
   ssh_username = "packer"
   ssh_password = var.ssh_password
 
-  iso_url      = "https://repo.almalinux.org/almalinux/9/isos/x86_64/AlmaLinux-9-latest-x86_64-dvd.iso"
-  iso_checksum = "sha256:7a392bdc879afd159b30da39a356b7b26c1ddf618b01549164da9aadbc40d814"
+  iso_url      = var.iso_url
+  iso_checksum = "sha256:${var.iso_checksum}"
 }
 
 build {
