@@ -1,24 +1,37 @@
-variable "vm_name" {
-  description = "Name of the lab virtual machine"
+variable "datacenter_name" {
+  description = "vSphere datacenter name"
   type        = string
-  default     = "datahoteling-lab-vm"
+  default     = "ha-datacenter"
+}
+
+variable "esxi_host" {
+  description = "ESXi host address or hostname"
+  type        = string
+}
+
+variable "datastore_name" {
+  description = "vSphere datastore name"
+  type        = string
 }
 
 variable "resource_pool_id" {
-  description = "vSphere resource pool ID for the lab VM"
+  description = "vSphere resource pool ID"
+  type        = string
+}
+
+variable "vm_name" {
+  description = "Lab VM name"
   type        = string
 }
 
 variable "num_cpus" {
   description = "Number of virtual CPUs"
   type        = number
-  default     = 2
 }
 
 variable "memory" {
-  description = "Memory in MB"
+  description = "Memory allocated to the VM in MB"
   type        = number
-  default     = 4096
 }
 
 variable "guest_id" {
@@ -27,37 +40,70 @@ variable "guest_id" {
 }
 
 variable "disk_size_gb" {
-  description = "Lab VM disk size in GB"
+  description = "Virtual disk size in GB"
   type        = number
-  default     = 20
 }
 
 variable "disk_label" {
-  description = "Lab VM disk label"
+  description = "Virtual disk label"
   type        = string
   default     = "disk0"
 }
 
 variable "disk_unit_number" {
-  description = "Lab VM disk unit number"
+  description = "Virtual disk unit number"
   type        = number
   default     = 0
 }
 
 variable "disk_controller_type" {
-  description = "Lab VM disk controller type"
+  description = "Virtual disk controller type"
   type        = string
   default     = "scsi"
 }
 
 variable "thin_provisioned" {
-  description = "Whether the lab VM disk is thin provisioned"
+  description = "Whether the virtual disk is thin provisioned"
   type        = bool
   default     = true
 }
 
 variable "network_adapter_type" {
-  description = "Lab VM network adapter type"
+  description = "Virtual network adapter type"
   type        = string
   default     = "vmxnet3"
+}
+
+variable "virtual_switch_name" {
+  description = "Terraform-managed standard vSwitch name"
+  type        = string
+}
+
+variable "network_name" {
+  description = "Terraform-managed port group name"
+  type        = string
+}
+
+variable "network_vlan_id" {
+  description = "VLAN ID. Use 0 for an untagged network."
+  type        = number
+  default     = 0
+}
+
+variable "uplink_nics" {
+  description = "Physical ESXi vmnic uplinks"
+  type        = list(string)
+  default     = []
+}
+
+variable "active_nics" {
+  description = "Active ESXi uplinks"
+  type        = list(string)
+  default     = []
+}
+
+variable "standby_nics" {
+  description = "Standby ESXi uplinks"
+  type        = list(string)
+  default     = []
 }

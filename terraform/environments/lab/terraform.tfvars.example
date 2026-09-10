@@ -1,19 +1,31 @@
-vm_name = "datahoteling-lab-vm"
+# vSphere
+datacenter_name = "ha-datacenter"
+esxi_host       = "REPLACE_WITH_ESXI_HOST"
+datastore_name  = "datastore1"
 
-# Replace with the actual resource pool ID discovered from ESXi.
+# Resource pool
 resource_pool_id = "REPLACE_WITH_RESOURCE_POOL_ID"
 
-num_cpus = 2
-memory   = 4096
+# VM sizing
+vm_name    = "datahoteling-lab-vm"
+num_cpus   = 2
+memory     = 4096
+guest_id   = "almalinux9_64Guest"
+disk_size_gb = 20
 
-# AlmaLinux 9 VMware guest ID.
-guest_id = "almalinux9_64Guest"
-
-disk_size_gb         = 20
 disk_label           = "disk0"
 disk_unit_number     = 0
 disk_controller_type = "scsi"
 thin_provisioned     = true
-
 network_adapter_type = "vmxnet3"
-power_state          = "off"
+
+# Terraform-managed network
+virtual_switch_name = "DataHoteling-vSwitch"
+network_name        = "DataHoteling-Lab"
+network_vlan_id     = 0
+
+# Fill these after checking the real ESXi host.
+# Do NOT guess vmnic names.
+uplink_nics  = []
+active_nics  = []
+standby_nics = []
