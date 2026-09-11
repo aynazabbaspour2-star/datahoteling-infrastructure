@@ -38,3 +38,37 @@ Thumbs.db
 
 # Terraform plans
 *.tfplan
+
+# Additional secret / credential protection
+*.auto.tfvars
+*.tfvars.json
+*.secret
+*.secrets
+*.credentials
+credentials/
+secrets/
+.secret/
+.secrets/
+
+# SSH private keys
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+id_ecdsa
+id_ecdsa.*
+
+# Certificates / private key material
+*.crt
+*.cer
+*.der
+*.jks
+*.keystore
+
+# Local Terraform / provider configuration
+.terraformrc
+terraform.rc
+
+# Local Packer variables
+packer.pkrvars.hcl
+packer.auto.pkrvars.hcl

@@ -96,3 +96,18 @@ jobs:
             -i inventories/production/hosts.yml \
             playbooks/site.yml \
             --syntax-check
+
+  security:
+    name: Security
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run repository security check
+        run: ./scripts/security-check.sh
