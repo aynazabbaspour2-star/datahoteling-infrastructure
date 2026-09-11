@@ -34,6 +34,8 @@ module "vm" {
 
   network_id = module.network.port_group_key
 
+  template_uuid = var.template_uuid
+
   num_cpus = var.num_cpus
   memory   = var.memory
   guest_id = var.guest_id
