@@ -1,0 +1,25 @@
+# vSphere
+vsphere_server = "REPLACE_WITH_ESXI_API_ENDPOINT"
+
+# Credentials should NOT be stored in this file.
+# Provide vsphere_user and vsphere_password through
+# environment variables or another secret mechanism.
+
+vsphere_user     = "REPLACE_WITH_VSPHERE_USER"
+vsphere_password = "REPLACE_WITH_VSPHERE_PASSWORD"
+
+# Existing infrastructure
+datacenter_name = "ha-datacenter"
+esxi_host       = "REPLACE_WITH_ESXI_HOST"
+datastore_name  = "datastore1"
+
+# Terraform-managed production network
+virtual_switch_name = "DataHoteling-vSwitch"
+network_name        = "DataHoteling-Production"
+network_vlan_id     = 0
+
+# These MUST be filled with the real ESXi vmnic names
+# after inspecting the ESXi host from inside the company network.
+uplink_nics  = []
+active_nics  = []
+standby_nics = []

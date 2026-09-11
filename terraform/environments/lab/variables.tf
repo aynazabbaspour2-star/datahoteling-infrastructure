@@ -1,3 +1,61 @@
+variable "datacenter_name" {
+  description = "vSphere datacenter name"
+  type        = string
+  default     = "ha-datacenter"
+}
+
+variable "esxi_host" {
+  description = "ESXi host name or address"
+  type        = string
+}
+
+variable "datastore_name" {
+  description = "vSphere datastore name"
+  type        = string
+  default     = "datastore1"
+}
+
+variable "virtual_switch_name" {
+  description = "Terraform-managed standard virtual switch name"
+  type        = string
+  default     = "DataHoteling-Lab-vSwitch"
+}
+
+variable "network_name" {
+  description = "Terraform-managed lab port group name"
+  type        = string
+  default     = "DataHoteling-Lab"
+}
+
+variable "network_vlan_id" {
+  description = "VLAN ID for the lab network"
+  type        = number
+  default     = 0
+
+  validation {
+    condition     = var.network_vlan_id >= 0 && var.network_vlan_id <= 4094
+    error_message = "VLAN ID must be between 0 and 4094."
+  }
+}
+
+variable "uplink_nics" {
+  description = "Physical ESXi vmnic uplinks"
+  type        = list(string)
+  default     = []
+}
+
+variable "active_nics" {
+  description = "Active ESXi vmnic uplinks"
+  type        = list(string)
+  default     = []
+}
+
+variable "standby_nics" {
+  description = "Standby ESXi vmnic uplinks"
+  type        = list(string)
+  default     = []
+}
+
 variable "vm_name" {
   description = "Name of the lab virtual machine"
   type        = string
@@ -7,6 +65,12 @@ variable "vm_name" {
 variable "resource_pool_id" {
   description = "vSphere resource pool ID for the lab VM"
   type        = string
+}
+
+variable "template_uuid" {
+  description = "UUID of the Packer-built AlmaLinux template"
+  type        = string
+  default     = null
 }
 
 variable "num_cpus" {
@@ -24,6 +88,7 @@ variable "memory" {
 variable "guest_id" {
   description = "VMware guest OS identifier"
   type        = string
+  default     = "rhel9_64Guest"
 }
 
 variable "disk_size_gb" {

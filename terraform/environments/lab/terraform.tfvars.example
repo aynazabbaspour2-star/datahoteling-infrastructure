@@ -1,13 +1,33 @@
-vm_name = "datahoteling-lab-vm"
+# Existing vSphere infrastructure
+datacenter_name = "ha-datacenter"
+esxi_host       = "REPLACE_WITH_ESXI_HOST"
+datastore_name  = "datastore1"
 
-# Replace with the actual resource pool ID discovered from ESXi.
+# Terraform-managed lab network
+virtual_switch_name = "DataHoteling-Lab-vSwitch"
+network_name        = "DataHoteling-Lab"
+network_vlan_id     = 0
+
+# Physical ESXi uplinks.
+# Fill these after checking the ESXi host with:
+# esxcli network nic list
+uplink_nics  = []
+active_nics  = []
+standby_nics = []
+
+# Lab VM
+vm_name          = "datahoteling-lab-vm"
 resource_pool_id = "REPLACE_WITH_RESOURCE_POOL_ID"
+
+# UUID of the Packer-built AlmaLinux golden image.
+# Leave null until the template exists in vSphere.
+template_uuid = null
 
 num_cpus = 2
 memory   = 4096
 
-# AlmaLinux 9 VMware guest ID.
-guest_id = "almalinux9_64Guest"
+# AlmaLinux 9 / RHEL 9 compatible VMware guest ID.
+guest_id = "rhel9_64Guest"
 
 disk_size_gb         = 20
 disk_label           = "disk0"
@@ -16,4 +36,3 @@ disk_controller_type = "scsi"
 thin_provisioned     = true
 
 network_adapter_type = "vmxnet3"
-power_state          = "off"

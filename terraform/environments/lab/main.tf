@@ -1,20 +1,27 @@
 data "vsphere_datacenter" "dc" {
-  name = "ha-datacenter"
+  name = var.datacenter_name
 }
 
 data "vsphere_host" "host" {
-  name          = "192.168.1.21"
+  name          = var.esxi_host
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
 data "vsphere_datastore" "datastore" {
-  name          = "datastore1"
+  name          = var.datastore_name
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
-data "vsphere_network" "vm_network" {
-  name          = "VM Network"
-  datacenter_id = data.vsphere_datacenter.dc.id
+module "network" {
+  source = "../../modules/network"
+
+  host_system_id      = data.vsphere_host.host.id
+  virtual_switch_name = var.virtual_switch_name
+  network_name        = var.network_name
+  network_vlan_id     = var.network_vlan_id
+  uplink_nics         = var.uplink_nics
+  active_nics         = var.active_nics
+  standby_nics        = var.standby_nics
 }
 
 module "vm" {
@@ -24,7 +31,10 @@ module "vm" {
   datastore_id     = data.vsphere_datastore.datastore.id
   host_system_id   = data.vsphere_host.host.id
   resource_pool_id = var.resource_pool_id
-  network_id       = data.vsphere_network.vm_network.id
+
+  network_id = module.network.port_group_key
+
+  template_uuid = var.template_uuid
 
   num_cpus = var.num_cpus
   memory   = var.memory

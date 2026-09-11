@@ -22,4 +22,13 @@ resource "vsphere_virtual_machine" "this" {
     thin_provisioned = var.thin_provisioned
   }
 
+  dynamic "clone" {
+    for_each = var.template_uuid == null ? [] : [var.template_uuid]
+
+    content {
+      template_uuid = clone.value
+      linked_clone  = false
+    }
+  }
+
 }
