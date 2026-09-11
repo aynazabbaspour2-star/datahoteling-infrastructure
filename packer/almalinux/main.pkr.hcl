@@ -18,6 +18,9 @@ source "vsphere-iso" "almalinux" {
 
   vm_name = var.vm_name
 
+  # Convert the completed AlmaLinux VM into a reusable vSphere template.
+  convert_to_template = true
+
   CPUs = var.num_cpus
   RAM  = var.memory
 
