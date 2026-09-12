@@ -23,13 +23,6 @@ variable "network_id" {
   type        = string
 }
 
-
-variable "template_uuid" {
-  description = "UUID of the Packer-built vSphere template used for cloning"
-  type        = string
-  default     = null
-}
-
 variable "num_cpus" {
   description = "Number of virtual CPUs"
   type        = number
