@@ -15,45 +15,10 @@ variable "datastore_name" {
   default     = "datastore1"
 }
 
-variable "virtual_switch_name" {
-  description = "Terraform-managed standard virtual switch name"
-  type        = string
-  default     = "DataHoteling-Lab-vSwitch"
-}
-
 variable "network_name" {
-  description = "Terraform-managed lab port group name"
+  description = "Existing vSphere port group used by the lab VM"
   type        = string
-  default     = "DataHoteling-Lab"
-}
-
-variable "network_vlan_id" {
-  description = "VLAN ID for the lab network"
-  type        = number
-  default     = 0
-
-  validation {
-    condition     = var.network_vlan_id >= 0 && var.network_vlan_id <= 4094
-    error_message = "VLAN ID must be between 0 and 4094."
-  }
-}
-
-variable "uplink_nics" {
-  description = "Physical ESXi vmnic uplinks"
-  type        = list(string)
-  default     = []
-}
-
-variable "active_nics" {
-  description = "Active ESXi vmnic uplinks"
-  type        = list(string)
-  default     = []
-}
-
-variable "standby_nics" {
-  description = "Standby ESXi vmnic uplinks"
-  type        = list(string)
-  default     = []
+  default     = "VM Network"
 }
 
 variable "vm_name" {
@@ -65,12 +30,6 @@ variable "vm_name" {
 variable "resource_pool_id" {
   description = "vSphere resource pool ID for the lab VM"
   type        = string
-}
-
-variable "template_uuid" {
-  description = "UUID of the Packer-built AlmaLinux template"
-  type        = string
-  default     = null
 }
 
 variable "num_cpus" {
@@ -110,7 +69,7 @@ variable "disk_unit_number" {
 }
 
 variable "disk_controller_type" {
-  description = "Lab VM disk controller type"
+  description = "Disk controller type"
   type        = string
   default     = "scsi"
 }
@@ -122,7 +81,7 @@ variable "thin_provisioned" {
 }
 
 variable "network_adapter_type" {
-  description = "Lab VM network adapter type"
+  description = "Virtual network adapter type"
   type        = string
   default     = "vmxnet3"
 }

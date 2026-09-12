@@ -23,6 +23,7 @@ variable "network_id" {
   type        = string
 }
 
+
 variable "template_uuid" {
   description = "UUID of the Packer-built vSphere template used for cloning"
   type        = string
@@ -47,7 +48,7 @@ variable "guest_id" {
 }
 
 variable "disk_size_gb" {
-  description = "Virtual disk size in GB. Must be at least as large as the template disk when cloning."
+  description = "Virtual disk size in GB."
   type        = number
   default     = 150
 }
