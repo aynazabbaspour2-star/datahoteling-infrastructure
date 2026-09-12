@@ -18,7 +18,6 @@ source "vsphere-iso" "almalinux" {
 
   vm_name = var.vm_name
 
-  # Convert the completed AlmaLinux VM into a reusable vSphere template.
   convert_to_template = true
 
   CPUs = var.num_cpus
@@ -35,7 +34,6 @@ source "vsphere-iso" "almalinux" {
     network      = var.network
     network_card = "vmxnet3"
   }
-
 
   http_content = {
     "/ks.cfg" = templatefile("http/ks.cfg", {
@@ -56,6 +54,11 @@ source "vsphere-iso" "almalinux" {
   ssh_username = "packer"
   ssh_password = var.ssh_password
 
+  pause_before_connecting = "20s"
+
+  shutdown_command = "sudo shutdown -P now"
+  shutdown_timeout = "10m"
+
   iso_url      = var.iso_url
   iso_checksum = "sha256:${var.iso_checksum}"
 }
@@ -64,4 +67,13 @@ build {
   sources = [
     "source.vsphere-iso.almalinux"
   ]
+
+  provisioner "shell" {
+    inline = [
+      "sudo cloud-init clean --logs || true",
+      "sudo truncate -s 0 /etc/machine-id",
+      "sudo rm -f /etc/ssh/ssh_host_*",
+      "sudo sync"
+    ]
+  }
 }

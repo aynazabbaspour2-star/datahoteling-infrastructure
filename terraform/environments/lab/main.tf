@@ -12,16 +12,9 @@ data "vsphere_datastore" "datastore" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
-module "network" {
-  source = "../../modules/network"
-
-  host_system_id      = data.vsphere_host.host.id
-  virtual_switch_name = var.virtual_switch_name
-  network_name        = var.network_name
-  network_vlan_id     = var.network_vlan_id
-  uplink_nics         = var.uplink_nics
-  active_nics         = var.active_nics
-  standby_nics        = var.standby_nics
+data "vsphere_network" "network" {
+  name          = var.network_name
+  datacenter_id = data.vsphere_datacenter.dc.id
 }
 
 module "vm" {
@@ -32,9 +25,7 @@ module "vm" {
   host_system_id   = data.vsphere_host.host.id
   resource_pool_id = var.resource_pool_id
 
-  network_id = module.network.port_group_key
-
-  template_uuid = var.template_uuid
+  network_id = data.vsphere_network.network.id
 
   num_cpus = var.num_cpus
   memory   = var.memory
@@ -45,6 +36,5 @@ module "vm" {
   disk_unit_number     = var.disk_unit_number
   disk_controller_type = var.disk_controller_type
   thin_provisioned     = var.thin_provisioned
-
   network_adapter_type = var.network_adapter_type
 }
