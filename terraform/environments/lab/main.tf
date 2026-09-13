@@ -23,7 +23,7 @@ module "vm" {
   vm_name          = var.vm_name
   datastore_id     = data.vsphere_datastore.datastore.id
   host_system_id   = data.vsphere_host.host.id
-  resource_pool_id = var.resource_pool_id
+  resource_pool_id = data.vsphere_host.host.resource_pool_id
 
   network_id = data.vsphere_network.network.id
 

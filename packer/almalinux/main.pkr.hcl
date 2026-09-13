@@ -13,8 +13,9 @@ source "vsphere-iso" "almalinux" {
   password            = var.vsphere_password
   insecure_connection = true
 
-  host      = var.host
-  datastore = var.datastore
+  datacenter = "DataHoteling-DCDatacenter"
+  host       = var.host
+  datastore  = var.datastore
 
   vm_name = var.vm_name
 
@@ -37,30 +38,31 @@ source "vsphere-iso" "almalinux" {
 
   http_content = {
     "/ks.cfg" = templatefile("http/ks.cfg", {
-      packer_password = var.ssh_password
+      packer_password_b64 = base64encode(var.ssh_password)
+      packer_public_key   = trimspace(file("packer_ed25519.pub"))
     })
   }
 
   boot_command = [
     "<wait5>",
-    "e",
-    "<wait1>",
-    "<down><down><down><down><end>",
+    "<tab>",
     " inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg",
     "<enter>",
     "<wait5>"
   ]
 
   ssh_username = "packer"
-  ssh_password = var.ssh_password
+  ssh_private_key_file = abspath("packer_ed25519")
 
+  ssh_handshake_attempts = 3
   pause_before_connecting = "20s"
 
   shutdown_command = "sudo shutdown -P now"
   shutdown_timeout = "10m"
 
-  iso_url      = var.iso_url
-  iso_checksum = "sha256:${var.iso_checksum}"
+  iso_paths = [
+    "[datastore1] AlmaLinux-9.7-x86_64-minimal.iso"
+  ]
 }
 
 build {
@@ -70,6 +72,8 @@ build {
 
   provisioner "shell" {
     inline = [
+      "sudo rm -f /home/packer/.ssh/authorized_keys",
+      "sudo userdel -r packer || true",
       "sudo cloud-init clean --logs || true",
       "sudo truncate -s 0 /etc/machine-id",
       "sudo rm -f /etc/ssh/ssh_host_*",

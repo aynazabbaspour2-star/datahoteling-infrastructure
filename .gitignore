@@ -72,3 +72,6 @@ terraform.rc
 # Local Packer variables
 packer.pkrvars.hcl
 packer.auto.pkrvars.hcl
+
+packer_ed25519
+packer_ed25519.pub

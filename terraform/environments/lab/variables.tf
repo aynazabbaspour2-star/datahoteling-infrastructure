@@ -27,11 +27,6 @@ variable "vm_name" {
   default     = "datahoteling-lab-vm"
 }
 
-variable "resource_pool_id" {
-  description = "vSphere resource pool ID for the lab VM"
-  type        = string
-}
-
 variable "num_cpus" {
   description = "Number of virtual CPUs"
   type        = number
