@@ -1,0 +1,17 @@
+vsphere_server   = "192.168.1.42"
+vsphere_username = "Administrator@vsphere.local"
+vsphere_password = "REPLACE_WITH_VSPHERE_PASSWORD"
+
+host      = "192.168.1.21"
+datastore = "datastore1"
+network   = "VM Network"
+
+vm_name = "datahoteling-ubuntu-golden"
+
+num_cpus = 2
+memory   = 2048
+
+disk_size_mb = 20480
+
+ssh_password       = "REPLACE_WITH_SSH_PASSWORD"
+packer_password_hash = "REPLACE_WITH_SHA512_PASSWORD_HASH"

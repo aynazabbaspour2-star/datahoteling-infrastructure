@@ -75,3 +75,6 @@ packer.auto.pkrvars.hcl
 
 packer_ed25519
 packer_ed25519.pub
+packer/ubuntu/ubuntu.pkrvars.hcl
+packer/ubuntu/packer_ed25519
+packer/ubuntu/packer_ed25519.pub
