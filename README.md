@@ -58,6 +58,8 @@ datahoteling-infrastructure/
 +-- monitoring/
 |
 +-- packer/
+|   +-- almalinux/
+|   +-- ubuntu/
 |
 +-- scripts/
 |
@@ -87,24 +89,27 @@ production - production infrastructure discovery and management
 
 The VMware provider used by this project is:
 
-vmware/vsphere
+vmware/vsphere version 2.16.1
 
-Provider version:
-
-2.16.1
 Lab
 
-The Lab environment contains the reusable VM module used to provision virtual machines.
+The Lab environment contains the reusable VM module used to provision virtual machines from Packer-built golden images.
+
+The VM factory currently supports two operating systems:
+
+AlmaLinux
+Ubuntu
+
+The selected OS is controlled through os_type, while the corresponding golden-image UUIDs are supplied through template_uuids.
 
 Example workflow:
 
 cd terraform/environments/lab
-
 terraform init
 terraform validate
 terraform plan
 
-Actual VM provisioning should only be performed against an ESXi host where the required API write operations are available.
+Actual VM provisioning should only be performed against the authorized lab vSphere environment where the required API write operations are available.
 
 Production
 
@@ -121,20 +126,67 @@ resource pool
 Example:
 
 cd terraform/environments/production
-
 terraform init
 terraform validate
 terraform plan
 
 The current production configuration is discovery-only and does not create or modify production virtual machines.
 
+Packer Golden Images
+
+Packer is used to build standardized VMware golden images for VPS provisioning.
+
+Current image factories:
+
+packer/almalinux - AlmaLinux golden image
+packer/ubuntu - Ubuntu Server golden image using Ubuntu Autoinstall
+
+Both image factories are designed for the same DataHoteling VMware environment and use a dedicated packer SSH account during image creation.
+
+The final image cleanup removes temporary SSH host keys and machine identity data so that cloned VPS instances can receive unique identities.
+
+Actual Packer builds require access to the internal vSphere network and the correct ISO/datastore paths.
+
+Golden Image → VPS Workflow
+                 Packer
+                   |
+        +----------+----------+
+        |                     |
+        v                     v
+   AlmaLinux              Ubuntu
+    Template              Template
+        |                     |
+        +----------+----------+
+                   |
+                   v
+               Terraform
+                   |
+                   v
+             VPS Clone
+                   |
+                   v
+              Ansible
+          OS / Service Config
+
+Terraform selects the golden image based on the requested OS:
+
+os_type = "almalinux"
+        OR
+os_type = "ubuntu"
+
+and maps it to the corresponding template UUID:
+
+template_uuids = {
+  almalinux = "<almalinux-template-uuid>"
+  ubuntu    = "<ubuntu-template-uuid>"
+}
 ESXi Licensing
 
 The current DataHoteling ESXi host uses the free VMware ESXi Hypervisor license.
 
 The free license permits normal VM operation through the ESXi Host Client but restricts certain vSphere API write operations.
 
-As a result, Terraform can successfully connect to the production ESXi host and discover infrastructure, but VM creation through the API is currently restricted.
+As a result, Terraform can successfully connect to the production ESXi host and discover infrastructure, but VM creation through the API may be restricted.
 
 The architecture therefore separates production discovery from lab provisioning:
 
@@ -164,7 +216,7 @@ Manages infrastructure as code and provides a reproducible infrastructure defini
 
 Packer
 
-Will be used to build standardized VM images.
+Builds standardized AlmaLinux and Ubuntu VM images for VPS cloning.
 
 Ansible
 
@@ -253,6 +305,39 @@ Production
 
 Production changes should not be applied directly without validation in a suitable Lab environment.
 
+Current Status
+
+The project is currently implementing the VPS image factory and multi-OS provisioning foundation.
+
+Completed:
+
+Terraform VMware foundation
+Lab environment
+Production discovery
+Reusable VM module
+AlmaLinux Packer golden-image factory
+Ubuntu Packer golden-image factory
+Terraform support for AlmaLinux and Ubuntu template selection
+Sensitive Terraform backup files excluded from Git
+
+Current branch:
+
+feat/vps-image-factory
+
+Recent milestones:
+
+0812bcb  feat: clone VPS VMs from golden image
+207e6e4  feat: add Ubuntu golden image factory
+99696a7  feat: support Ubuntu and AlmaLinux VPS templates
+
+Pending internal-network validation:
+
+Verify the exact Ubuntu ISO filename in the vSphere datastore
+Build and validate the Ubuntu golden image
+Verify AlmaLinux and Ubuntu template UUIDs
+Run Terraform plan against the lab vSphere environment
+Validate VM cloning and guest boot behavior
+Complete Ansible post-provisioning
 Goals
 
 The long-term goal is to build a reproducible and maintainable infrastructure platform for DataHoteling with:
@@ -260,6 +345,7 @@ The long-term goal is to build a reproducible and maintainable infrastructure pl
 Infrastructure as Code
 Automated VM provisioning
 Standardized VM images
+Multi-OS VPS provisioning
 Configuration management
 Hosting automation
 Monitoring and observability
@@ -267,30 +353,3 @@ CI/CD
 Backup and disaster recovery
 Infrastructure testing
 Failure simulation and recovery procedures
-Status
-
-Work in progress.
-
-Current milestone:
-
-Terraform VMware foundation
-        |
-        +-- Lab environment
-        +-- Production discovery
-        +-- Reusable VM module
-
-Next milestones:
-
-Packer
-  |
-  v
-Ansible
-  |
-  v
-Monitoring
-  |
-  v
-GitHub Actions
-  |
-  v
-Backup / Disaster Recovery
