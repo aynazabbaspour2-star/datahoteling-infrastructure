@@ -1,32 +1,23 @@
+# vSphere connection
+vsphere_server   = "192.168.1.42"
+vsphere_user     = "Administrator@vsphere.local"
+vsphere_password = "REPLACE_WITH_VSPHERE_PASSWORD"
+
 # Existing vSphere infrastructure
-datacenter_name = "ha-datacenter"
-esxi_host       = "REPLACE_WITH_ESXI_HOST"
+datacenter_name = "DataHoteling-DCDatacenter"
+esxi_host       = "192.168.1.21"
 datastore_name  = "datastore1"
+network_name    = "VM Network"
 
-# Terraform-managed lab network
-virtual_switch_name = "DataHoteling-Lab-vSwitch"
-network_name        = "DataHoteling-Lab"
-network_vlan_id     = 0
-
-# Physical ESXi uplinks.
-# Fill these after checking the ESXi host with:
-# esxcli network nic list
-uplink_nics  = []
-active_nics  = []
-standby_nics = []
+# Packer-built AlmaLinux golden image
+# Replace with the actual template UUID from vSphere.
+template_uuid = "REPLACE_WITH_TEMPLATE_UUID"
 
 # Lab VM
-vm_name          = "datahoteling-lab-vm"
-resource_pool_id = "REPLACE_WITH_RESOURCE_POOL_ID"
-
-# UUID of the Packer-built AlmaLinux golden image.
-# Leave null until the template exists in vSphere.
-template_uuid = null
+vm_name = "datahoteling-vps-test-01"
 
 num_cpus = 2
-memory   = 4096
-
-# AlmaLinux 9 / RHEL 9 compatible VMware guest ID.
+memory   = 2048
 guest_id = "rhel9_64Guest"
 
 disk_size_gb         = 20

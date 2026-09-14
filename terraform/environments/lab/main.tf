@@ -37,4 +37,5 @@ module "vm" {
   disk_controller_type = var.disk_controller_type
   thin_provisioned     = var.thin_provisioned
   network_adapter_type = var.network_adapter_type
+  template_uuid        = var.template_uuid
 }

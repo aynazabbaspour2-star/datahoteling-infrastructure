@@ -75,3 +75,13 @@ variable "network_adapter_type" {
   type        = string
   default     = "vmxnet3"
 }
+
+variable "template_uuid" {
+  description = "UUID of the vSphere golden image template used to clone the VM"
+  type        = string
+
+  validation {
+    condition     = trimspace(var.template_uuid) != ""
+    error_message = "template_uuid must not be empty."
+  }
+}

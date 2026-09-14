@@ -80,3 +80,13 @@ variable "network_adapter_type" {
   type        = string
   default     = "vmxnet3"
 }
+
+variable "template_uuid" {
+  description = "UUID of the Packer-built AlmaLinux golden image template"
+  type        = string
+
+  validation {
+    condition     = trimspace(var.template_uuid) != ""
+    error_message = "template_uuid must not be empty. Set it to the UUID of the golden image template."
+  }
+}

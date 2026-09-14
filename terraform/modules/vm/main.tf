@@ -21,4 +21,9 @@ resource "vsphere_virtual_machine" "this" {
     controller_type  = var.disk_controller_type
     thin_provisioned = var.thin_provisioned
   }
+
+  clone {
+    template_uuid = var.template_uuid
+  }
+
 }
