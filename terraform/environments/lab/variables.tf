@@ -39,10 +39,29 @@ variable "memory" {
   default     = 4096
 }
 
-variable "guest_id" {
-  description = "VMware guest OS identifier"
+variable "os_type" {
+  description = "Operating system for the VPS"
   type        = string
-  default     = "rhel9_64Guest"
+
+  validation {
+    condition     = contains(["almalinux", "ubuntu"], lower(var.os_type))
+    error_message = "os_type must be either almalinux or ubuntu."
+  }
+}
+
+variable "template_uuids" {
+  description = "Golden image template UUIDs keyed by operating system"
+  type        = map(string)
+
+  validation {
+    condition = alltrue([
+      for os in ["almalinux", "ubuntu"] :
+      contains(keys(var.template_uuids), os) &&
+      trimspace(var.template_uuids[os]) != ""
+    ])
+
+    error_message = "template_uuids must contain non-empty UUIDs for both almalinux and ubuntu."
+  }
 }
 
 variable "disk_size_gb" {
@@ -79,14 +98,4 @@ variable "network_adapter_type" {
   description = "Virtual network adapter type"
   type        = string
   default     = "vmxnet3"
-}
-
-variable "template_uuid" {
-  description = "UUID of the Packer-built AlmaLinux golden image template"
-  type        = string
-
-  validation {
-    condition     = trimspace(var.template_uuid) != ""
-    error_message = "template_uuid must not be empty. Set it to the UUID of the golden image template."
-  }
 }

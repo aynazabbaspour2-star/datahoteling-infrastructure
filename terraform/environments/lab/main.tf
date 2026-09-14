@@ -29,7 +29,7 @@ module "vm" {
 
   num_cpus = var.num_cpus
   memory   = var.memory
-  guest_id = var.guest_id
+  guest_id = var.os_type == "ubuntu" ? "ubuntu64Guest" : "rhel9_64Guest"
 
   disk_size_gb         = var.disk_size_gb
   disk_label           = var.disk_label
@@ -37,5 +37,5 @@ module "vm" {
   disk_controller_type = var.disk_controller_type
   thin_provisioned     = var.thin_provisioned
   network_adapter_type = var.network_adapter_type
-  template_uuid        = var.template_uuid
+  template_uuid        = var.template_uuids[lower(var.os_type)]
 }

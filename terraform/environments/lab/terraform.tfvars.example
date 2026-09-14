@@ -9,16 +9,22 @@ esxi_host       = "192.168.1.21"
 datastore_name  = "datastore1"
 network_name    = "VM Network"
 
-# Packer-built AlmaLinux golden image
-# Replace with the actual template UUID from vSphere.
-template_uuid = "REPLACE_WITH_TEMPLATE_UUID"
+# VPS operating system
+# Supported values: almalinux, ubuntu
+os_type = "ubuntu"
 
-# Lab VM
+# Packer-built golden image templates
+# Replace these with the actual vSphere template UUIDs.
+template_uuids = {
+  almalinux = "REPLACE_WITH_ALMALINUX_TEMPLATE_UUID"
+  ubuntu    = "REPLACE_WITH_UBUNTU_TEMPLATE_UUID"
+}
+
+# VPS
 vm_name = "datahoteling-vps-test-01"
 
 num_cpus = 2
 memory   = 2048
-guest_id = "rhel9_64Guest"
 
 disk_size_gb         = 20
 disk_label           = "disk0"
