@@ -1,0 +1,60 @@
+#cloud-config
+
+autoinstall:
+  version: 1
+
+  locale: en_US.UTF-8
+
+  keyboard:
+    layout: us
+
+  timezone: Asia/Baku
+
+  identity:
+    hostname: ubuntu-vps
+    username: ${packer_username}
+    password: ${packer_password_hash}
+
+  ssh:
+    install-server: true
+    allow-pw: true
+
+  storage:
+    layout:
+      name: direct
+
+  packages:
+    - openssh-server
+    - sudo
+    - cloud-init
+    - open-vm-tools
+
+  updates: all
+
+  late-commands:
+    - curtin in-target --target=/target -- usermod -aG sudo ${packer_username}
+    - curtin in-target --target=/target -- mkdir -p /home/${packer_username}/.ssh
+    - curtin in-target --target=/target -- bash -c "echo '${packer_public_key}' > /home/${packer_username}/.ssh/authorized_keys"
+    - curtin in-target --target=/target -- chown -R ${packer_username}:${packer_username} /home/${packer_username}/.ssh
+    - curtin in-target --target=/target -- chmod 700 /home/${packer_username}/.ssh
+    - curtin in-target --target=/target -- chmod 600 /home/${packer_username}/.ssh/authorized_keys
+
+    - curtin in-target --target=/target -- useradd -m -s /bin/bash dhprovision
+    - curtin in-target --target=/target -- usermod -aG sudo dhprovision
+    - curtin in-target --target=/target -- mkdir -p /home/dhprovision/.ssh
+    - curtin in-target --target=/target -- bash -c "echo '${provisioner_public_key}' > /home/dhprovision/.ssh/authorized_keys"
+    - curtin in-target --target=/target -- chown -R dhprovision:dhprovision /home/dhprovision/.ssh
+    - curtin in-target --target=/target -- chmod 700 /home/dhprovision/.ssh
+    - curtin in-target --target=/target -- chmod 600 /home/dhprovision/.ssh/authorized_keys
+
+    - curtin in-target --target=/target -- systemctl enable ssh
+
+    - curtin in-target --target=/target -- bash -c "echo '${packer_username} ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/${packer_username}"
+    - curtin in-target --target=/target -- chmod 440 /etc/sudoers.d/${packer_username}
+
+    - curtin in-target --target=/target -- bash -c "echo 'dhprovision ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/dhprovision"
+    - curtin in-target --target=/target -- chmod 440 /etc/sudoers.d/dhprovision
+
+    - curtin in-target --target=/target -- passwd -l dhprovision
+
+  shutdown: poweroff

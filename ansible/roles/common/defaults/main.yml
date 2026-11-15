@@ -1,0 +1,12 @@
+---
+common_packages:
+  - curl
+  - wget
+  - vim-minimal
+  - git
+  - unzip
+  - tar
+  - rsync
+  - chrony
+
+common_timezone: Asia/Baku

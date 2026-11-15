@@ -1,0 +1,32 @@
+[Unit]
+Description=DataHoteling Provisioning Queue Worker
+After=network-online.target datahoteling-provisioning-api.service
+Wants=network-online.target
+RequiresMountsFor=/home/aynaz/datahoteling-infrastructure
+
+[Service]
+Type=simple
+User=aynaz
+Group=aynaz
+
+WorkingDirectory=/home/aynaz/datahoteling-infrastructure
+
+EnvironmentFile=/home/aynaz/datahoteling-infrastructure/deploy/env/datahoteling-provisioning-worker.env
+
+ExecStart=/home/aynaz/datahoteling-infrastructure/.venv/bin/python -m provisioning.worker.worker
+
+Restart=on-failure
+RestartSec=5
+
+NoNewPrivileges=true
+PrivateTmp=true
+RuntimeDirectory=datahoteling-provisioning-worker
+RuntimeDirectoryMode=0700
+ProtectSystem=full
+ProtectHome=false
+
+KillSignal=SIGINT
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

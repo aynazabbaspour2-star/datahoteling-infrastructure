@@ -1,0 +1,35 @@
+# vSphere connection
+vsphere_server   = "YOUR_VSPHERE_SERVER"
+vsphere_user     = "YOUR_VSPHERE_USERNAME"
+vsphere_password = "REPLACE_WITH_VSPHERE_PASSWORD"
+
+# Existing vSphere infrastructure
+datacenter_name = "YOUR_DATACENTER"
+esxi_host       = "YOUR_ESXI_HOST"
+datastore_name  = "YOUR_DATASTORE"
+network_name    = "YOUR_NETWORK"
+
+# VPS operating system
+# Supported values: almalinux, ubuntu
+os_type = "ubuntu"
+
+# Packer-built golden image templates
+# Replace these with the actual vSphere template UUIDs.
+template_uuids = {
+  almalinux = "REPLACE_WITH_TEMPLATE_UUID"
+  ubuntu    = "REPLACE_WITH_TEMPLATE_UUID"
+}
+
+# VPS
+vm_name = "example-vm"
+
+num_cpus = 2
+memory   = 2048
+
+disk_size_gb         = 20
+disk_label           = "disk0"
+disk_unit_number     = 0
+disk_controller_type = "scsi"
+thin_provisioned     = true
+
+network_adapter_type = "vmxnet3"

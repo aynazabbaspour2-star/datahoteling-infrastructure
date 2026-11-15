@@ -1,0 +1,5 @@
+name: "Datahoteling Premium"
+description: "Datahoteling custom WHMCS client area theme"
+author: "Datahoteling"
+config:
+  parent: twenty-one

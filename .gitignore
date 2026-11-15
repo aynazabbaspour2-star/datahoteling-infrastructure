@@ -1,0 +1,192 @@
+# ==================================================
+# Terraform state, plans and local configuration
+# ==================================================
+
+.terraform/
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+tfplan
+tfplan-*
+crash.log
+crash.*.log
+
+*.tfvars
+*.tfvars.json
+*.auto.tfvars
+*.auto.tfvars.json
+
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+.terraformrc
+terraform.rc
+
+# ==================================================
+# Packer local files and credentials
+# ==================================================
+
+packer_cache/
+**/packer_cache/
+
+*.pkrvars.hcl
+*.pkrvars.hcl.*
+packer.pkrvars.hcl
+packer.auto.pkrvars.hcl
+
+packer_ed25519
+packer_ed25519.pub
+**/packer_ed25519
+**/packer_ed25519.pub
+
+packer/_archive/
+**/_archive/
+
+# ==================================================
+# Secrets, credentials, certificates and keys
+# ==================================================
+
+.env
+.env.*
+*.env
+
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+*.jks
+*.keystore
+
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+id_ecdsa
+id_ecdsa.*
+
+.vault_password
+*.secret
+*.secrets
+*.credentials
+
+credentials/
+secrets/
+.secret/
+.secrets/
+
+deploy/env/
+
+# ==================================================
+# Python virtual environments and generated files
+# ==================================================
+
+.venv/
+.venv-*/
+**/.venv/
+**/.venv-*/
+
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+
+# ==================================================
+# Runtime databases and logs
+# ==================================================
+
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+
+*.log
+error_log
+
+# ==================================================
+# Backups and temporary files
+# ==================================================
+
+*.bak
+*.bak.*
+*.bak*
+
+*.backup
+*.backup-*
+*.backup.*
+
+*.pre-*
+
+**/backup/
+**/backup-*/
+**/backup-before-*/
+
+# WHMCS backup copies, if staged inside this repository
+**/*backup*.tpl
+**/*backup*.php
+**/*backup*.css
+**/*backup*.js
+**/*backup*.combined*
+
+# ==================================================
+# Ansible
+# ==================================================
+
+*.retry
+
+# ==================================================
+# Operating system and editor files
+# ==================================================
+
+.DS_Store
+Thumbs.db
+
+.vscode/
+.idea/
+
+*.swp
+*.swo
+
+# ==================================================
+# WHMCS sensitive configuration and generated files
+# ==================================================
+
+whmcs/configuration.php
+whmcs/**/configuration.php
+whmcs/vendor/
+whmcs/**/vendor/
+
+whmcs/attachments/
+whmcs/downloads/
+whmcs/templates_c/
+whmcs/**/templates_c/
+whmcs/crons/
+whmcs/**/cache/
+whmcs/**/sessions/
+
+# Database exports and dumps
+*.sql
+*.sql.*
+*.mysql
+*.dump
+
+# Temporary and unwanted files
+meh.txt
+**/meh.txt
+
+# All WHMCS backup variants
+whmcs/**/*backup*
+
+# Local production Ansible inventory - never commit live infrastructure details
+/ansible/inventories/production/
+
+# Local sanitization backups
+*.before-sanitize-*
+
+# Exclude obsolete duplicate VPS module
+/modules/servers/datahotelingvps/datahotelingvps.php

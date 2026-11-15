@@ -1,0 +1,28 @@
+[Unit]
+Description=DataHoteling Provisioning API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=aynaz
+Group=aynaz
+WorkingDirectory=/home/aynaz/datahoteling-infrastructure
+
+EnvironmentFile=/home/aynaz/datahoteling-infrastructure/deploy/env/datahoteling-provisioning-api.env
+Environment="DATAHOTELING_SECRET_DIR=/run/datahoteling-provisioning/secrets"
+
+ExecStart=/home/aynaz/datahoteling-infrastructure/.venv/bin/python -m uvicorn provisioning.api.app:app --host 127.0.0.1 --port 8099
+
+Restart=on-failure
+RestartSec=5
+
+NoNewPrivileges=true
+PrivateTmp=true
+RuntimeDirectory=datahoteling-provisioning
+RuntimeDirectoryMode=0700
+ProtectSystem=full
+ProtectHome=false
+
+[Install]
+WantedBy=multi-user.target

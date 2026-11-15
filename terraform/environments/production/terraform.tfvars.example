@@ -1,0 +1,25 @@
+# vSphere
+vsphere_server = "YOUR_VSPHERE_SERVER"
+
+# Credentials should NOT be stored in this file.
+# Provide vsphere_user and vsphere_password through
+# environment variables or another secret mechanism.
+
+vsphere_user     = "YOUR_VSPHERE_USERNAME"
+vsphere_password = "REPLACE_WITH_VSPHERE_PASSWORD"
+
+# Existing infrastructure
+datacenter_name = "YOUR_DATACENTER"
+esxi_host       = "YOUR_ESXI_HOST"
+datastore_name  = "YOUR_DATASTORE"
+
+# Terraform-managed production network
+virtual_switch_name = "YOUR_VIRTUAL_SWITCH"
+network_name        = "YOUR_NETWORK"
+network_vlan_id     = 0
+
+# These MUST be filled with the real ESXi vmnic names
+# after inspecting the ESXi host from inside the company network.
+uplink_nics  = []
+active_nics  = []
+standby_nics = []
