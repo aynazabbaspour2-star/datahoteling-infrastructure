@@ -1,0 +1,64 @@
+name: datahoteling-lab
+
+services:
+
+  postgres:
+    image: postgres:17
+    container_name: datahoteling-postgres
+
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: datahoteling_dev
+      POSTGRES_USER: datahoteling_app
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=peer"
+
+    secrets:
+      - postgres_password
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    networks:
+      - datahoteling_db
+
+    mem_limit: 512m
+    memswap_limit: 512m
+    cpus: 1.0
+    pids_limit: 100
+    shm_size: 128m
+
+    command:
+      - postgres
+      - -c
+      - shared_buffers=128MB
+      - -c
+      - max_connections=30
+      - -c
+      - work_mem=4MB
+      - -c
+      - maintenance_work_mem=32MB
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"'
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+secrets:
+  postgres_password:
+    file: ./secrets/postgres_password.txt
+
+volumes:
+  postgres_data:
+    name: datahoteling_postgres_data
+
+networks:
+  datahoteling_db:
+    name: datahoteling_postgres_network
+    driver: bridge
+    internal: true
